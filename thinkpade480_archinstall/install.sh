@@ -1,6 +1,6 @@
 #!/bin/bash
-rootpasswd=""
-passwd=""
+rootpasswd="xutao911"
+passwd="xutao911"
 ln -sf  /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 hwclock --systohc
 sed -i 's/\#en_SG.UTF-8 UTF-8/en_SG.UTF-8 UTF-8/g' /etc/locale.gen
@@ -9,8 +9,8 @@ locale-gen
 wait
 
 echo 'LANG=en_SG.UTF-8' >> /etc/locale.conf
-echo 'thinkpad-e480' >>/etc/hostname
-echo -e '127.0.0.1 localhost\n::1 localhost\n127.0.1.1 thinkpad-e480.localdomain thinkpad-e480'
+echo 'myarch' >>/etc/hostname
+echo -e '127.0.0.1 localhost\n::1 localhost\n127.0.1.1 myarch.localdomain myarch'
 echo -e '$ROOTPASSWD\n$ROOTPASSWD'|(passwd root)
 wait
 echo -e '[archlinuxcn]\nServer = https://mirrors.ustc.edu.cn/archlinuxcn/$arch' >> /etc/pacman.conf
