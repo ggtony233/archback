@@ -3,7 +3,7 @@ export Rdisk="/dev/nvme0n1p6"
 export Rdir="/mnt"
 export Boot="/dev/nvme0n1p1"
 export Home="/dev/sda2"
-export Gamed="/dev/sda1"
+export Gamed="/dev/nvme1n1p2"
 export Swap="/dev/nvme0n1p5"
 echo 'Server = https://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist 
 echo "delete all old file in the boot disk!!!"
@@ -12,7 +12,7 @@ pacman -Syy
 wait
 mkswap $Swap
 mkfs.btrfs -f $Rdisk
-mkfs.xfs -f $Home
+#mkfs.xfs -f $Home
 wait
 mount $Rdisk $Rdir
 wait

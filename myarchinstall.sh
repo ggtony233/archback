@@ -13,7 +13,7 @@ echo 'myarch' >>/etc/hostname
 echo -e '127.0.0.1 localhost\n::1 localhost\n127.0.1.1 myarch.localdomain myarch'
 echo -e '$ROOTPASSWD\n$ROOTPASSWD'|(passwd root)
 wait
-echo -e '[archlinuxcn]\nServer = https://mirrors.aliyun.com/archlinuxcn/$arch' >> /etc/pacman.conf
+echo -e '[archlinuxcn]\nServer = https://mirrors.ustc.edu.cn/archlinuxcn/$arch' >> /etc/pacman.conf
 pacman -Syu
 wait
 echo -e '\n'|(pacman -S grub efibootmgr os-prober archlinuxcn-keyring zsh)
