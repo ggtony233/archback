@@ -1,13 +1,14 @@
 #!/bin/bash
 export Rdisk="/dev/nvme0n1p2"
 export Rdir="/mnt"
-echo 'Server = https://mirrors.ustc.edu.cn/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist 
+echo 'Server = https://mirrors.aliyun.com/archlinux/$repo/os/$arch' > /etc/pacman.d/mirrorlist 
 echo "delete all old file in the boot disk!!!"
 sleep 10
 pacman -Syy
 wait
 mkfs.btrfs -f $Rdisk
-mkfs.xfs -f "/dev/sda1"
+##仅首次安装
+#mkfs.xfs -f "/dev/sda1"
 wait
 mount $Rdisk $Rdir
 wait
