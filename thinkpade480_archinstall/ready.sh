@@ -8,12 +8,12 @@ pacman -Syy
 wait
 mkfs.btrfs -f $Rdisk
 ##仅首次安装
-#mkfs.xfs -f "/dev/sda1"
+mkfs.xfs -f "/dev/sda1"
 wait
 mount $Rdisk $Rdir
 wait
 btrfs subvolume create /mnt/@
-btrfs subvolume create /mnt/@usr_local
+#btrfs subvolume create /mnt/@usr_local
 btrfs subvolume create /mnt/@var
 wait
 umount $Rdir
