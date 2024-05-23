@@ -53,7 +53,7 @@ beautiful.font="LXGW WenKai Mono 10"
 terminal = "alacritty"
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
-
+awful.spawn.with_shell("nm-applet")
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
 -- If you do not like this or do not have such a key,
@@ -85,11 +85,11 @@ awful.layout.layouts = {
 -- {{{ Menu
 -- Create a launcher widget and a main menu
 myawesomemenu = {
-   { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
-   { "manual", terminal .. " -e man awesome" },
-   { "edit config", editor_cmd .. " " .. awesome.conffile },
-   { "restart", awesome.restart },
-   { "quit", function() awesome.quit() end },
+   { "热键", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
+   { "说明", terminal .. " -e man awesome" },
+   { "编辑设置", editor_cmd .. " " .. awesome.conffile },
+   { "重启桌面", awesome.restart },
+   { "退出桌面", function() awesome.quit() end },
 }
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
@@ -109,11 +109,27 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 
 -- Keyboard map indicator and switcher
 mykeyboardlayout = awful.widget.keyboardlayout()
-
+beautiful.pavucontrol_icon ="/usr/share/icons/Adwaita/symbolic/legacy/multimedia-volume-control-symbolic.svg"
 -- {{{ Wibar
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
-
+local pavucontrol_button = wibox.widget {
+    {
+        {
+            image  = beautiful.pavucontrol_icon, -- 设置图标路径
+            resize = true,
+            widget = wibox.widget.imagebox
+        },
+        margins = 4,
+        widget  = wibox.container.margin
+    },
+    buttons = gears.table.join(
+        awful.button({}, 1, function ()
+            awful.spawn("pavucontrol")
+        end)
+    ),
+    layout = wibox.layout.fixed.horizontal,
+}
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
                     awful.button({ }, 1, function(t) t:view_only() end),
@@ -185,7 +201,7 @@ local function set_wallpaper()
                         title = "Wallpaper error",
                         text = e })
            
-        end
+        endpavucontrol_button,
     end
     local content = f:read("*all")
     
@@ -268,6 +284,7 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
+            pavucontrol_button,
             mykeyboardlayout,
             wibox.widget.systray(),
             mytextclock,
@@ -287,6 +304,8 @@ root.buttons(gears.table.join(
 
 -- {{{ Key bindings
 globalkeys = gears.table.join(
+    awful.key({ "Control", "Mod1" }, "a", function () awful.spawn("flameshot gui") end,
+              {description = "take screenshot", group = "launcher"}),
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
@@ -601,16 +620,17 @@ client.connect_signal("request::titlebars", function(c)
             layout  = wibox.layout.flex.horizontal
         },
         { -- Right
-            awful.titlebar.widget.floatingbutton (c),
-            awful.titlebar.widget.maximizedbutton(c),
+--            awful.titlebar.widget.floatingbutton (c),
+ --[[            awful.titlebar.widget.maximizedbutton(c),
             awful.titlebar.widget.stickybutton   (c),
             awful.titlebar.widget.ontopbutton    (c),
-            awful.titlebar.widget.closebutton    (c),
+            awful.titlebar.widget.closebutton    (c), ]]
             layout = wibox.layout.fixed.horizontal()
         },
         layout = wibox.layout.align.horizontal
     }
 end)
+awful.util.spawn("compton -c -C -t-4 -l-4 -r4 -o.75 -f -D7 -I.07 -O.07 -b")
 
 -- Enable sloppy focus, so that focus follows mouse.
 client.connect_signal("mouse::enter", function(c)
@@ -620,3 +640,13 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+
+function mynotify()
+    naughty.notify({ title = "welcome", text = "你好!"..os.getenv("USER") })
+    local path = get_script_path()
+    naughty.notify({ title = "path", text = path.."notify-python/notfiy.py"})
+    awful.spawn.with_shell(path.."/notify-python/notify.py")
+    awful.spawn.with_shell("flameshot &") 
+end
+
+mynotify()

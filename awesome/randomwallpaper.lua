@@ -20,29 +20,39 @@ function set_wallpaper()
         return
     end
     -- Randomly choose a wallpaper
-    local wallpaper = wallpapers[math.random(#wallpapers)]
     local data = io.popen("xprop -root | grep _NET_SUPPORTING")
     local textr = data:read("*all")
     local Wid = string.match(textr,"window id # ([x%x]+)")
-    naughty.notify({ title = "WID", text = Wid})
     data:close()
-    if wallpaper.type == "Image" then
-        gears.wallpaper.fit(wallpaper.path, s)
-    elseif wallpaper.type == "Video" then
-        awful.spawn.with_shell("xwinwrap -ov -ni -g 2560x1440+0+0 -- mpv --loop --no-audio --Wid="..Wid.." " .. wallpaper.path)
-    elseif wallpaper.type == "Html" then
-       awful.spawn.with_shell("xwinwrap -ov -ni -g 2560x1440+0+0 -- mpv --no-audio --loop --Wid="..Wid.." " .. wallpaper.path)
+ 
+    
+    while(true) 
+    do
+        wallpaper = wallpapers[math.random(#wallpapers)]
+        --[[ if wallpaper.type == "Image" then
+            gears.wallpaper.fit(wallpaper.path, s)
+            break
+        elseif wallpaper.type == "Video" then
+            awful.spawn.with_shell("mpv --loop --no-border --geometry=100%x100% --no-input-default-bindings --no-input-cursor --mute --wid="..Wid.." ".."'"..wallpaper.path..",")
+            break ]]
+        if wallpaper.type == "Html" then
+        awful.spawn.with_shell("xwinwrap -ov -g 2560x1440+0+0 -- chromium " .. wallpaper.path)
+            break
+        end
     end
+    naughty.notify({ title = "Type of wallpaper", text = wallpaper.path })
+
 end
 function ReadDir(path)
-    NamedPath = string.gsub(path,"/","_") 
-    local f,e = io.open("/home/ggtony/.config/awesome/"..NamedPath..".json", "r")
+    NamedPath = string.gsub(path,"/","_")
+    PWD = get_script_path()
+    local f,e = io.open(PWD.."/"..NamedPath..".json", "r")
     if f == nil then
         naughty.notify({ preset = naughty.config.presets.critical,
                         title = "Wallpaper error",
                         text = e })
-        os.execute("/usr/local/bin/ScanDir -l "..path.." -o  /home/ggtony/.config/awesome/"..NamedPath..".json")
-        local f,e = io.open("/home/ggtony/.config/awesome/"..NamedPath..".json", "r")
+        os.execute("/usr/local/bin/ScanDir -l "..path.." -o  "..PWD.."/"..NamedPath..".json")
+        local f,e = io.open(PWD.."/"..NamedPath..".json", "r")
         if f == nil then
             naughty.notify({ preset = naughty.config.presets.critical,
                         title = "Wallpaper error",
