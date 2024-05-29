@@ -1,9 +1,10 @@
 #!/bin/bash
 ndomain=`echo $2|cut -d '/' -f 3`;
-mirrorurl="mirror.ghproxy.com/";
+mirrorurl="github.moeyy.xyz";
 case $ndomain in 
 	"github.com"|"raw.githubusercontent.com")
-		url="https://"$mirrorurl/$2;
+#		url="https://"$mirrorurl/$2;
+		url=$2;
 		echo "$mirrorurl"
 		;;
 	*)
