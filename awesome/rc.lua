@@ -6,6 +6,7 @@ pcall(require, "luarocks.loader")
 local wallpapers = require("randomwallpaper")
 local gears = require("gears")
 local awful = require("awful")
+--local --vicious = require("--vicious")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
@@ -237,6 +238,18 @@ gears.timer {
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
+-- kelu custom widget
+cpuwidget = wibox.widget.textbox()
+--vicious.cache(--vicious.widgets.cpu)
+--vicious.register(cpuwidget, --vicious.widgets.cpu, "CPU: <span foreground='#20B2AA'> $1% </span>", 13)
+  
+memwidget = wibox.widget.textbox()
+--vicious.cache(--vicious.widgets.mem)
+--vicious.register(memwidget, --vicious.widgets.mem, "内存: <span foreground='#20B2AA'> $1% </span>", 13)
+
+batwidget = wibox.widget.textbox()
+
+--vicious.register(batwidget, --vicious.widgets.bat, "电量: <span foreground='#20B2AA'> $2% </span>", 61, "BAT1")
 
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
@@ -272,6 +285,9 @@ awful.screen.connect_for_each_screen(function(s)
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "top", screen = s })
 
+-- kelu custom widget end
+
+
     -- Add widgets to the wibox
     s.mywibox:setup {
         layout = wibox.layout.align.horizontal,
@@ -289,6 +305,9 @@ awful.screen.connect_for_each_screen(function(s)
             wibox.widget.systray(),
             mytextclock,
             s.mylayoutbox,
+--[[             cpuwidget,
+            memwidget, ]]
+
         },
     }
 end)
@@ -567,7 +586,7 @@ awful.rules.rules = {
 
     -- Add titlebars to normal clients and dialogs
     { rule_any = {type = { "normal", "dialog" }
-      }, properties = { titlebars_enabled = true }
+      }, properties = { titlebars_enabled = false }
     },
 
     -- Set Firefox to always map on the tag named "2" on screen 1.
@@ -620,17 +639,17 @@ client.connect_signal("request::titlebars", function(c)
             layout  = wibox.layout.flex.horizontal
         },
         { -- Right
---            awful.titlebar.widget.floatingbutton (c),
- --[[            awful.titlebar.widget.maximizedbutton(c),
+           awful.titlebar.widget.floatingbutton (c),
+            awful.titlebar.widget.maximizedbutton(c),
             awful.titlebar.widget.stickybutton   (c),
             awful.titlebar.widget.ontopbutton    (c),
-            awful.titlebar.widget.closebutton    (c), ]]
+            awful.titlebar.widget.closebutton    (c), 
             layout = wibox.layout.fixed.horizontal()
         },
         layout = wibox.layout.align.horizontal
     }
 end)
-awful.util.spawn("compton -c -C -t-4 -l-4 -r4 -o.75 -f -D7 -I.07 -O.07 -b")
+--awful.util.spawn("compton -c -C -t-4 -l-4 -r4 -o.75 -f -D7 -I.07 -O.07 -b")
 
 -- Enable sloppy focus, so that focus follows mouse.
 client.connect_signal("mouse::enter", function(c)
@@ -641,12 +660,16 @@ client.connect_signal("focus", function(c) c.border_color = beautiful.border_foc
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
 
-function mynotify()
+function runonce()
     naughty.notify({ title = "welcome", text = "你好!"..os.getenv("USER") })
     local path = get_script_path()
     naughty.notify({ title = "path", text = path.."notify-python/notfiy.py"})
     awful.spawn.with_shell(path.."/notify-python/notify.py")
     awful.spawn.with_shell("flameshot &") 
+    awful.spawn.with_shell("xrdb -merge .Xresources")
+    awful.spawn.with_shell("dbus-launch kdeconnectd")
+    awful.spawn.with_shell("dbus-launch kdeconnect-indicator")
+    awful.spawn.with_shell("compton --conf ~/.config/compton/compton.conf &")
 end
 
-mynotify()
+runonce()

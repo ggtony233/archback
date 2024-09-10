@@ -1,6 +1,6 @@
 #!/bin/bash
-export rootpasswd=""
-export upasswd=""
+export rootpasswd="xutao911"
+export upasswd="xutao911"
 ln -sf  /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 hwclock --systohc
 sed -i 's/\#en_SG.UTF-8 UTF-8/en_SG.UTF-8 UTF-8/g' /etc/locale.gen
@@ -10,14 +10,14 @@ wait
 
 echo 'LANG=en_SG.UTF-8' >> /etc/locale.conf
 echo 'myarch' >>/etc/hostname
-echo -e '127.0.0.1 localhost\n::1 localhost\n127.0.1.1 myarch.localdomain myarch'
+echo -e '127.0.0.1 localhost\n::1 localhost\n127.0.1.1 myarch.localdomain myarch' >> /etc/hosts
 echo -e '$ROOTPASSWD\n$ROOTPASSWD'|(passwd root)
 wait
 echo -e '[archlinuxcn]\nServer = https://mirrors.ustc.edu.cn/archlinuxcn/$arch' >> /etc/pacman.conf
 pacman -Syu
 wait
-echo -e '\n'|(pacman -S grub efibootmgr os-prober archlinuxcn-keyring zsh)
-echo -e '\n' |(pacman -S paru)
+echo -e '\n'|(pacman -S grub efibootmgr os-prober zsh)
+#echo -e '\n' |(pacman -S paru)
 wait
 sed -i 's/MODULES=()/MODULES=(btrfs xfs)/g' /etc/mkinitcpio.conf
 mkinitcpio -P

@@ -29,15 +29,15 @@ function set_wallpaper()
     while(true) 
     do
         wallpaper = wallpapers[math.random(#wallpapers)]
-        --[[ if wallpaper.type == "Image" then
+        if wallpaper.type == "Image" then
             gears.wallpaper.fit(wallpaper.path, s)
             break
-        elseif wallpaper.type == "Video" then
+        --[[ elseif wallpaper.type == "Video" then
             awful.spawn.with_shell("mpv --loop --no-border --geometry=100%x100% --no-input-default-bindings --no-input-cursor --mute --wid="..Wid.." ".."'"..wallpaper.path..",")
-            break ]]
-        if wallpaper.type == "Html" then
+            break  ]]
+        --[[ if wallpaper.type == "Html" then
         awful.spawn.with_shell("xwinwrap -ov -g 2560x1440+0+0 -- chromium " .. wallpaper.path)
-            break
+            break ]]
         end
     end
     naughty.notify({ title = "Type of wallpaper", text = wallpaper.path })

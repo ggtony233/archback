@@ -7,6 +7,8 @@ import threading
 from systemd import journal
 import websocket
 import json
+import dbus
+import dbus.mainloop.glib
 
 gi.require_version('Notify', '0.7')
 from gi.repository import Notify
@@ -35,6 +37,23 @@ def monitor_filesystem(path_to_watch):
     notifier = pyinotify.Notifier(wm, event_handler)
     wm.add_watch(path_to_watch, mask, rec=True)
     notifier.loop()
+def monitor_kdeconnect():
+    def on_kdeconnect_notification(bus, message):
+        args = message.get_args_list()
+        if len(args) > 1:
+            app_name = args[0]
+            notification_body = args[1]
+            send_notification("KDE Connect", f"{app_name}: {notification_body}")
+
+    dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
+    bus = dbus.SessionBus()
+    bus.add_signal_receiver(
+        on_kdeconnect_notification,
+        dbus_interface="org.kde.kdeconnect.device.notifications",
+        signal_name="notification"
+    )
+    loop = GLib.MainLoop()
+    loop.run()
 
 def monitor_system_log():
     j = journal.Reader()
@@ -92,5 +111,7 @@ if __name__ == "__main__":
     gotify_thread = threading.Thread(target=monitor_gotify, args=(gotify_url, gotify_token))
     gotify_thread.start()
     # 等待线程完成
+    kdeconnect_thread = threading.Thread(target=monitor_kdeconnect)
+    kdeconnect_thread.start()
     fs_thread.join()
     log_thread.join()

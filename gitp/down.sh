@@ -4,7 +4,8 @@ mirrorurl="mirror.ghproxy.com/";
 case $ndomain in 
 	"github.com"|"raw.githubusercontent.com")
 		url="https://"$mirrorurl/$2;
-		echo "$mirrorurl"
+#		url=$2;
+#		echo "$url"
 		;;
 	*)
 		url=$2;

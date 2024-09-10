@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 import subprocess
 
-rootpasswd = ""
-upasswd = ""
+rootpasswd = "xutao911"
+upasswd = "xutao911"
 
 # 设置时区
 subprocess.run(["ln", "-sf", "/usr/share/zoneinfo/Asia/Shanghai", "/etc/localtime"])
