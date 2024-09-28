@@ -6,7 +6,7 @@ pcall(require, "luarocks.loader")
 local wallpapers = require("randomwallpaper")
 local gears = require("gears")
 local awful = require("awful")
---local --vicious = require("--vicious")
+--local vicious = require("vicious")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
@@ -19,6 +19,7 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
+local batteryarc_widget = require("awesome-wm-widgets.batteryarc-widget.batteryarc")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -47,7 +48,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.init(gears.filesystem.get_themes_dir() .. "xresources/theme.lua")
 beautiful.font="LXGW WenKai Mono 10"
 
 -- This is used later as the default terminal and editor to run.
@@ -109,28 +110,28 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- Keyboard map indicator and switcher
-mykeyboardlayout = awful.widget.keyboardlayout()
-beautiful.pavucontrol_icon ="/usr/share/icons/Adwaita/symbolic/legacy/multimedia-volume-control-symbolic.svg"
+-- mykeyboardlayout = awful.widget.keyboardlayout()
+-- beautiful.pavucontrol_icon ="/usr/share/icons/Adwaita/symbolic/legacy/multimedia-volume-control-symbolic.svg"
 -- {{{ Wibar
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
-local pavucontrol_button = wibox.widget {
-    {
-        {
-            image  = beautiful.pavucontrol_icon, -- 设置图标路径
-            resize = true,
-            widget = wibox.widget.imagebox
-        },
-        margins = 4,
-        widget  = wibox.container.margin
-    },
-    buttons = gears.table.join(
-        awful.button({}, 1, function ()
-            awful.spawn("pavucontrol")
-        end)
-    ),
-    layout = wibox.layout.fixed.horizontal,
-}
+-- local pavucontrol_button = wibox.widget {
+--     {
+--         {
+--             image  = beautiful.pavucontrol_icon, -- 设置图标路径
+--             resize = true,
+--             widget = wibox.widget.imagebox
+--         },
+--         margins = 4,
+--         widget  = wibox.container.margin
+--     },
+--     buttons = gears.table.join(
+--         awful.button({}, 1, function ()
+--             awful.spawn("pavucontrol")
+--         end)
+--     ),
+--     layout = wibox.layout.fixed.horizontal,
+-- }
 -- Create a wibox for each screen and add it
 local taglist_buttons = gears.table.join(
                     awful.button({ }, 1, function(t) t:view_only() end),
@@ -239,17 +240,17 @@ gears.timer {
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
 -- kelu custom widget
-cpuwidget = wibox.widget.textbox()
---vicious.cache(--vicious.widgets.cpu)
---vicious.register(cpuwidget, --vicious.widgets.cpu, "CPU: <span foreground='#20B2AA'> $1% </span>", 13)
+--cpuwidget = wibox.widget.textbox()
+--vicious.cache(vicious.widgets.cpu)
+--vicious.register(cpuwidget, vicious.widgets.cpu, "CPU: <span foreground='#20B2AA'> $1% </span>", 13)
   
-memwidget = wibox.widget.textbox()
---vicious.cache(--vicious.widgets.mem)
---vicious.register(memwidget, --vicious.widgets.mem, "内存: <span foreground='#20B2AA'> $1% </span>", 13)
+--memwidget = wibox.widget.textbox()
+--vicious.cache(vicious.widgets.mem)
+--vicious.register(memwidget, vicious.widgets.mem, "内存: <span foreground='#20B2AA'> $1% </span>", 13)
 
-batwidget = wibox.widget.textbox()
-
---vicious.register(batwidget, --vicious.widgets.bat, "电量: <span foreground='#20B2AA'> $2% </span>", 61, "BAT1")
+--batwidget = wibox.widget.textbox()
+--vicious.cache(vicious.widgets.batwidget)
+--vicious.register(batwidget, vicious.widgets.bat, "电量: <span foreground='#20B2AA'> $2% </span>", 61, "BAT1")
 
 awful.screen.connect_for_each_screen(function(s)
     -- Wallpaper
@@ -300,13 +301,17 @@ awful.screen.connect_for_each_screen(function(s)
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            pavucontrol_button,
+--            pavucontrol_button,
             mykeyboardlayout,
             wibox.widget.systray(),
+            batteryarc_widget,
             mytextclock,
             s.mylayoutbox,
---[[             cpuwidget,
-            memwidget, ]]
+            
+--            cpuwidget,
+--            memwidget,
+--            batwidget,
+            
 
         },
     }

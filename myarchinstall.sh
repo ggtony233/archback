@@ -1,6 +1,6 @@
 #!/bin/bash
-export rootpasswd="xutao911"
-export upasswd="xutao911"
+export rootpasswd=""
+export upasswd=""
 ln -sf  /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 hwclock --systohc
 sed -i 's/\#en_SG.UTF-8 UTF-8/en_SG.UTF-8 UTF-8/g' /etc/locale.gen
