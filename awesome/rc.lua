@@ -83,16 +83,20 @@ awful.layout.layouts = {
     -- awful.layout.suit.corner.se,
 }
 -- }}}
-
+function rebootdesktop()
+    awful.spawn.with_shell("pkill notify.py")
+    awesome.restart()
+end
 -- {{{ Menu
 -- Create a launcher widget and a main menu
 myawesomemenu = {
    { "热键", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
    { "说明", terminal .. " -e man awesome" },
    { "编辑设置", editor_cmd .. " " .. awesome.conffile },
-   { "重启桌面", awesome.restart },
+   { "重启桌面", rebootdesktop  },
    { "退出桌面", function() awesome.quit() end },
 }
+
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
                                     { "system", systemmenu },
@@ -611,12 +615,13 @@ function runonce()
     naughty.notify({ title = "welcome", text = "你好!"..os.getenv("USER") })
     local path = get_script_path()
     naughty.notify({ title = "path", text = path.."notify-python/notfiy.py"})
+    awful.spawn.with_shell("pkill -9 notify.py")
     awful.spawn.with_shell(path.."/notify-python/notify.py")
     awful.spawn.with_shell("flameshot &") 
     awful.spawn.with_shell("xrdb -merge .Xresources")
-    awful.spawn.with_shell("dbus-launch kdeconnectd")
-    awful.spawn.with_shell("dbus-launch kdeconnect-indicator")
-    awful.spawn.with_shell("compton --conf ~/.config/compton/compton.conf &")
+--     awful.spawn.with_shell("dbus-launch kdeconnectd")
+--     awful.spawn.with_shell("dbus-launch kdeconnect-indicator")
+--     awful.spawn.with_shell("compton --conf ~/.config/compton/compton.conf &")
 end
 
 runonce()
