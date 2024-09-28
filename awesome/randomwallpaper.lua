@@ -40,7 +40,7 @@ function set_wallpaper()
             break ]]
         end
     end
-    naughty.notify({ title = "Type of wallpaper", text = wallpaper.path })
+    naughty.notify({ title = wallpaper.type, text = wallpaper.path })
 
 end
 function ReadDir(path)

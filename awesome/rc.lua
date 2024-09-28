@@ -20,6 +20,7 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -47,7 +48,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.init(gears.filesystem.get_themes_dir() .. "xresources/theme.lua")
 beautiful.font="LXGW WenKai Mono 10"
 
 -- This is used later as the default terminal and editor to run.
@@ -170,62 +171,7 @@ local tasklist_buttons = gears.table.join(
                      awful.button({ }, 5, function ()
                                               awful.client.focus.byidx(-1)
                                           end))
---[[ local function set_wallpaper(s)
-    -- Wallpaper
-    if beautiful.wallpaper then
-        local wallpaper = beautiful.wallpaper
-        -- If wallpaper is a function, call it with the screen
-        if type(wallpaper) == "function" then
-            wallpaper = wallpaper(s)
-        end
-        gears.wallpaper.maximized(wallpaper, s, true)
-    end
-end  ]]
 
-
-
-
-
---[[ ---- Wallpaper setup function
-local function set_wallpaper()
-    local WallpaerPath="/home/ggtony/ShareLibrary/车/福利姬"
-    -- Read the JSON file
-    local f,e = io.open("/home/ggtony/.config/awesome/filelist.json", "r")
-    if f == nil then
-        naughty.notify({ preset = naughty.config.presets.critical,
-                        title = "Wallpaper error",
-                        text = e })
-        os.execute("/usr/local/bin/ScanDir -l "..WallpaerPath.." -o  /home/ggtony/.config/awesome/filelist.json")
-        local f,e = io.open("/home/ggtony/.config/awesome/filelist.json", "r")
-        if f == nil then
-            naughty.notify({ preset = naughty.config.presets.critical,
-                        title = "Wallpaper error",
-                        text = e })
-           
-        endpavucontrol_button,
-    end
-    local content = f:read("*all")
-    
-    f:close()
-    local wallpapers,e = cjson.decode(content)
-    if wallpapers == nil or #wallpapers == 0 then
-        naughty.notify({ preset = naughty.config.presets.critical,
-                        title = "Wallpaper error",
-                        text = "The wallpaper list is empty" })
-        return
-    end
-    -- Randomly choose a wallpaper
-    local wallpaper = wallpapers[math.random(#wallpapers)]
-
-    if wallpaper.type == "Image" then
-        gears.wallpaper.maximized(wallpaper.path, s, true)
-    elseif wallpaper.type == "Video" then
-        awful.spawn.with_shell("xwinwrap -ov -ni -g 2560x1440+0+0 -- mpv --loop --no-audio --wid WID " .. wallpaper.path)
-    elseif wallpaper.type == "Html" then
-        awful.spawn.with_shell("xwinwrap -ov -ni -g 2560x1440+0+0 -- mpv --no-audio --loop --wid WID " .. wallpaper.path)
-    end
-end
- ]]
 -- Wallpaper change timer
 gears.timer {
     timeout = 1800,
@@ -305,6 +251,7 @@ awful.screen.connect_for_each_screen(function(s)
             wibox.widget.systray(),
             mytextclock,
             s.mylayoutbox,
+
 --[[             cpuwidget,
             memwidget, ]]
 
