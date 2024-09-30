@@ -12,4 +12,4 @@ case $ndomain in
 		;;
 esac
 echo  -e "download from $url\n"
-/usr/bin/axel -n 8 -a -o $1 $url
+/usr/bin/axel -n 4 -a -o $1 $url

@@ -668,6 +668,7 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 function runonce()
     naughty.notify({ title = "welcome", text = "你好!"..os.getenv("USER") })
     local path = get_script_path()
+    awful.spawn.with_shell("pkill notify.py")
     naughty.notify({ title = "path", text = path.."notify-python/notfiy.py"})
     awful.spawn.with_shell(path.."/notify-python/notify.py")
     awful.spawn.with_shell("flameshot &") 
